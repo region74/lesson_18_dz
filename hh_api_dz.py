@@ -9,8 +9,7 @@ gorod = '1384'
 params = {
     'text': found_vac,
     'experience': 'noExperience',
-    'area':gorod
-
+    'area': gorod
 }
 
 result = requests.get(url, params=params).json()
@@ -27,9 +26,20 @@ for item in result['items']:
     # for sk in item['area']['name']:
     city = item['area']['name']
     emp = item['employer']['name']
-    salary = item['salary']['from']
-    employers_city.append(f'Город: {city} Фирма: {emp} Зарплата от: {salary}')
-    # skil = item['snippet']['requirement']
+    try:
+        sal = item['salary']['from']
+    except Exception:
+        sal = 'Не указана'
+    employers_city.append(f'Город: {city} Фирма: {emp} Зарплата от: {sal}')
 
 for i in employers_city:
     print(i)
+
+with open('json_hh.json', 'w') as f:
+    json.dump(employers_city, f)
+
+with open('json_hh.json', 'r') as f:
+    employers_city = json.load(f)
+    print('*' * 100)
+    for i in employers_city:
+        print(i)
